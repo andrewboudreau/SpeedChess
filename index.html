@@ -11,7 +11,7 @@
 .app{min-height:100dvh;display:flex;flex-direction:column;align-items:center;gap:10px;padding:max(14px,env(safe-area-inset-top)) 12px max(16px,env(safe-area-inset-bottom))}
 .top{width:min(100%,560px);display:flex;justify-content:space-between;align-items:center}.brand{font-size:1.25rem;font-weight:950}.brand b{color:var(--accent)}.net{font-size:.78rem;color:var(--muted);border:1px solid #3b3b3b;border-radius:999px;padding:6px 9px}.net.live{color:#dfffc5;border-color:#4e6b35}.net.err{color:#ffcaca;border-color:#733}
 .card{width:min(100%,560px);background:var(--panel);border:1px solid #363636;border-radius:18px;padding:18px;box-shadow:0 18px 50px rgba(0,0,0,.25)}h1{font-size:clamp(1.8rem,8vw,2.6rem);letter-spacing:-.05em;margin:0 0 7px}.lead{color:var(--muted);line-height:1.45;margin:0 0 16px}
-.presets{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}.preset,.secondary,.danger,.primary{border-radius:12px;padding:12px;font-weight:850}.preset,.secondary{background:#303030;color:#fff;border:1px solid #444}.preset.active,.primary{background:var(--accent);color:#14200a;border:1px solid var(--accent)}.primary{width:100%}.danger{width:100%;background:#3a2525;color:#ffc5c5;border:1px solid #633}
+.presets{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}.customTime{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}.timeField{display:grid;grid-template-columns:1fr auto;align-items:center;background:#151515;border:1px solid #444;border-radius:12px;overflow:hidden}.timeField input{width:100%;min-width:0;background:transparent;color:#fff;border:0;outline:0;padding:11px 8px 11px 12px;font-weight:900;font-size:1.05rem}.timeField span{padding-right:12px;color:#888;font-size:.8rem;font-weight:800}.preset,.secondary,.danger,.primary{border-radius:12px;padding:12px;font-weight:850}.preset,.secondary{background:#303030;color:#fff;border:1px solid #444}.preset.active,.primary{background:var(--accent);color:#14200a;border:1px solid var(--accent)}.primary{width:100%}.danger{width:100%;background:#3a2525;color:#ffc5c5;border:1px solid #633}
 .sep{display:flex;align-items:center;gap:10px;color:#777;font-size:.8rem;margin:15px 0}.sep:before,.sep:after{content:"";height:1px;background:#3a3a3a;flex:1}.join{display:grid;grid-template-columns:1fr auto;gap:8px}.join .primary{width:auto}.codein{min-width:0;background:#151515;color:#fff;border:1px solid #444;border-radius:12px;padding:12px;text-align:center;text-transform:uppercase;letter-spacing:.12em;font-weight:900;font-size:1.1rem}.fine{font-size:.77rem;color:#777;margin:12px 0 0}
 #wait,#game{display:none}.room{text-align:center;font-size:clamp(2.6rem,13vw,4.4rem);font-weight:950;letter-spacing:.12em;color:var(--accent);margin:8px 0}.waitBtns,.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
 #game{width:min(100%,560px);flex-direction:column;gap:6px}.player{display:grid;grid-template-columns:1fr auto;align-items:center;padding:5px 2px;font-weight:850}.clock{min-width:116px;text-align:center;font-variant-numeric:tabular-nums;font-size:clamp(1.55rem,7vw,2.1rem);font-weight:950;background:#2d2d2d;border-radius:11px;padding:7px 10px}.clock.active{background:#eee;color:#151515}.clock.low{color:#ff8a8a}.clock.active.low{background:#ffe1e1;color:#7c1111}
@@ -27,6 +27,10 @@
 <h1>Fast chess. Two phones.</h1>
 <p class="lead">Create a room, send the code to your opponent, and play live. No account required.</p>
 <div class="presets"><button class="preset" data-m="1">1 min</button><button class="preset active" data-m="3">3 min</button><button class="preset" data-m="5">5 min</button></div>
+<div class="customTime" aria-label="Custom starting time">
+  <label class="timeField"><input id="timeMin" type="number" min="0" max="180" step="1" value="3" inputmode="numeric" aria-label="Minutes"><span>MIN</span></label>
+  <label class="timeField"><input id="timeSec" type="number" min="0" max="59" step="1" value="0" inputmode="numeric" aria-label="Seconds"><span>SEC</span></label>
+</div>
 <button id="create" class="primary">Create game</button>
 <div class="sep">or join a game</div>
 <div class="join"><input id="roomIn" class="codein" maxlength="6" placeholder="CODE" autocomplete="off" spellcheck="false"><button id="join" class="primary">Join</button></div>
@@ -56,8 +60,26 @@ const $=id=>document.getElementById(id);
 const lobby=$("lobby"),wait=$("wait"),game=$("game"),board=$("board"),net=$("net"),roomIn=$("roomIn"),gameStatus=$("gameStatus");
 let minutes=3,peer=null,conn=null,isHost=false,myColor="w",flipped=false,room="",selected=null,targets=[],view=new Chess(),state=null,receivedAt=0,hostChess=null,lastTick=0,timer=null,toastTimer=null;
 
-document.querySelectorAll(".preset").forEach(b=>b.onclick=()=>{minutes=+b.dataset.m;document.querySelectorAll(".preset").forEach(x=>x.classList.toggle("active",x===b));});
-$("create").onclick=createGame;$("join").onclick=()=>joinGame(roomIn.value);$("cancel").onclick=reset;$("newGame").onclick=reset;$("flip").onclick=()=>{flipped=!flipped;renderBoard();};$("copy").onclick=copyInvite;$("share").onclick=shareInvite;
+const timeMin=$("timeMin"),timeSec=$("timeSec");
+function setClockFromInputs(){
+  const m=Math.max(0,Math.min(180,Math.floor(Number(timeMin.value)||0)));
+  const s=Math.max(0,Math.min(59,Math.floor(Number(timeSec.value)||0)));
+  timeMin.value=m;timeSec.value=s;minutes=(m*60+s)/60;
+  document.querySelectorAll(".preset").forEach(x=>x.classList.remove("active"));
+  return m*60+s;
+}
+function clockLabel(){
+  const total=Math.round(minutes*60),m=Math.floor(total/60),s=total%60;
+  return m+":"+String(s).padStart(2,"0");
+}
+document.querySelectorAll(".preset").forEach(b=>b.onclick=()=>{
+  minutes=+b.dataset.m;timeMin.value=minutes;timeSec.value=0;
+  document.querySelectorAll(".preset").forEach(x=>x.classList.toggle("active",x===b));
+});
+timeMin.onchange=setClockFromInputs;timeSec.onchange=setClockFromInputs;
+timeMin.oninput=()=>document.querySelectorAll(".preset").forEach(x=>x.classList.remove("active"));
+timeSec.oninput=()=>document.querySelectorAll(".preset").forEach(x=>x.classList.remove("active"));
+$("create").onclick=()=>{if(setClockFromInputs()<1){showToast("Enter a starting time.");return;}createGame();};$("join").onclick=()=>joinGame(roomIn.value);$("cancel").onclick=reset;$("newGame").onclick=reset;$("flip").onclick=()=>{flipped=!flipped;renderBoard();};$("copy").onclick=copyInvite;$("share").onclick=shareInvite;
 roomIn.oninput=()=>roomIn.value=clean(roomIn.value);roomIn.onkeydown=e=>{if(e.key==="Enter")joinGame(roomIn.value);};
 const hashRoom=new URLSearchParams(location.hash.slice(1)).get("join");if(hashRoom){roomIn.value=clean(hashRoom);history.replaceState(null,"",location.pathname+location.search);}
 
@@ -76,7 +98,7 @@ function wirePeerHost(){
   });
 }
 function createGame(){
-  resetNetwork();isHost=true;myColor="w";flipped=false;room=randomCode();lobby.style.display="none";wait.style.display="block";$("roomCode").textContent=room;$("waitTime").textContent=minutes+" minute game";setNet("Opening room…");peer=new Peer(peerId(room));wirePeerHost();
+  resetNetwork();isHost=true;myColor="w";flipped=false;room=randomCode();lobby.style.display="none";wait.style.display="block";$("roomCode").textContent=room;$("waitTime").textContent=clockLabel()+" per player";setNet("Opening room…");peer=new Peer(peerId(room));wirePeerHost();
 }
 function joinGame(raw){
   const code=clean(raw);if(code.length!==6){showToast("Enter the 6-character room code.");return;}
