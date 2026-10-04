@@ -257,9 +257,9 @@ function finishUndo(accepted,revision){
   if(!state||!hostUndoSnapshot||revision!==state.revision||hostUndoSnapshot.revision!==state.revision){conn?.send({type:"undo-result",accepted:false,revision,reason:"stale"});pendingUndo=null;showToast("Too late to undo.");return;}
   const before=hostUndoSnapshot.before;try{hostChess.undo();}catch{}
   state.fen=hostChess.fen();state.whiteMs=before.whiteMs;state.blackMs=before.blackMs;state.turn=before.turn;state.turnDelayMs=before.turnDelayMs||0;state.running=before.running;state.result=before.result;state.reason=before.reason;state.lastMove=before.lastMove;state.capturedWhite=[...before.capturedWhite];state.capturedBlack=[...before.capturedBlack];state.revision++;state.canUndo=false;
-  hostUndoSnapshot=null;pendingUndo=null;lastTick=Date.now();hideUndoOffer();const s=snapshot();receiveState(s);sendState(s);conn?.send({type:"undo-result",accepted:true,revision});showToast("Move undone.");
+  hostUndoSnapshot=null;pendingUndo=null;premove=null;premoveSelected=null;premoveTargets=[];lastTick=Date.now();hideUndoOffer();const s=snapshot();receiveState(s);sendState(s);conn?.send({type:"undo-result",accepted:true,revision});showToast("Move undone.");
 }
-function handleUndoResult(d){pendingUndo=null;hideUndoOffer();if(d.accepted)showToast("Move undone.");else showToast(d.reason==="stale"?"Too late to undo.":"Undo declined.");updateUndoUi();}
+function handleUndoResult(d){pendingUndo=null;hideUndoOffer();if(d.accepted){premove=null;premoveSelected=null;premoveTargets=[];renderBoard();showToast("Move undone.");}else showToast(d.reason==="stale"?"Too late to undo.":"Undo declined.");updateUndoUi();}
 
 function choose(square){
   if(!state||!state.running||state.result||pendingUndo)return;
