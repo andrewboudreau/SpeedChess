@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#171717">
 <title>SpeedChess</title>
 <style>
-:root{--bg:#151515;--panel:#222;--text:#f5f5f5;--muted:#aaa;--accent:#9ad15b;--light:#e7d5b8;--dark:#8d684d;--last:rgba(238,215,61,.42)}
+:root{--bg:#151515;--panel:#222;--text:#f5f5f5;--muted:#aaa;--accent:#9ad15b;--light:#e7d5b8;--dark:#8d684d;--whitePiece:#fff8e8;--blackPiece:#151515;--last:rgba(238,215,61,.42)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif}button,input{font:inherit}button{touch-action:manipulation}
 .app{min-height:100dvh;display:flex;flex-direction:column;align-items:center;gap:10px;padding:max(14px,env(safe-area-inset-top)) 12px max(16px,env(safe-area-inset-bottom))}
 .top{width:min(100%,560px);display:flex;justify-content:space-between;align-items:center}.brand{font-size:1.25rem;font-weight:950}.brand b{color:var(--accent)}.topActions{display:flex;align-items:center;gap:7px}.iconBtn{width:34px;height:34px;border-radius:999px;border:1px solid #3b3b3b;background:#222;color:#ddd;font-size:1rem;font-weight:900;display:grid;place-items:center;padding:0}.net{font-size:.78rem;color:var(--muted);border:1px solid #3b3b3b;border-radius:999px;padding:6px 9px}.net.live{color:#dfffc5;border-color:#4e6b35}.net.err{color:#ffcaca;border-color:#733}
@@ -14,10 +14,10 @@
 .presets{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}.customTime{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}.timeField{display:grid;grid-template-columns:1fr auto;align-items:center;background:#151515;border:1px solid #444;border-radius:12px;overflow:hidden}.timeField input{width:100%;min-width:0;background:transparent;color:#fff;border:0;outline:0;padding:11px 8px 11px 12px;font-weight:900;font-size:1.05rem}.timeField span{padding-right:12px;color:#888;font-size:.8rem;font-weight:800}.preset,.secondary,.danger,.primary{border-radius:12px;padding:12px;font-weight:850}.preset,.secondary{background:#303030;color:#fff;border:1px solid #444}.preset.active,.primary{background:var(--accent);color:#14200a;border:1px solid var(--accent)}.primary{width:100%}.danger{width:100%;background:#3a2525;color:#ffc5c5;border:1px solid #633}
 .sep{display:flex;align-items:center;gap:10px;color:#777;font-size:.8rem;margin:15px 0}.sep:before,.sep:after{content:"";height:1px;background:#3a3a3a;flex:1}.join{display:grid;grid-template-columns:1fr auto;gap:8px}.join .primary{width:auto}.codein{min-width:0;background:#151515;color:#fff;border:1px solid #444;border-radius:12px;padding:12px;text-align:center;text-transform:uppercase;letter-spacing:.12em;font-weight:900;font-size:1.1rem}.fine{font-size:.77rem;color:#777;margin:12px 0 0}
 #wait,#game{display:none}.room{text-align:center;font-size:clamp(2.6rem,13vw,4.4rem);font-weight:950;letter-spacing:.12em;color:var(--accent);margin:8px 0}.waitBtns,.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
-#game{width:min(100%,560px);flex-direction:column;gap:6px}.player{display:grid;grid-template-columns:1fr auto;align-items:center;padding:5px 2px;font-weight:850}.clock{min-width:116px;text-align:center;font-variant-numeric:tabular-nums;font-size:clamp(1.55rem,7vw,2.1rem);font-weight:950;background:#2d2d2d;border-radius:11px;padding:7px 10px}.clock.active{background:#eee;color:#151515}.clock.low{color:#ff8a8a}.clock.active.low{background:#ffe1e1;color:#7c1111}
+#game{width:min(100%,560px);flex-direction:column;gap:6px}.player{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;padding:5px 2px;font-weight:850}.playerInfo{min-width:0;display:flex;flex-direction:column;gap:2px}.playerName{display:flex;align-items:center}.capturedShelf{min-height:20px;display:flex;align-items:center;gap:1px;white-space:nowrap;overflow:hidden;color:#999;font-size:.72rem;font-weight:800}.capturedPieces{display:flex;align-items:center;gap:0;min-width:0;overflow:hidden}.capturedPiece{font-family:"Segoe UI Symbol","Noto Sans Symbols 2",serif;font-size:1.05rem;line-height:1;margin-right:-1px}.capturedPoints{margin-left:5px;color:#aaa;flex:0 0 auto}.clock{min-width:116px;text-align:center;font-variant-numeric:tabular-nums;font-size:clamp(1.55rem,7vw,2.1rem);font-weight:950;background:#2d2d2d;border-radius:11px;padding:7px 10px}.clock.active{background:#eee;color:#151515}.clock.low{color:#ff8a8a}.clock.active.low{background:#ffe1e1;color:#7c1111}
 #board{width:100%;aspect-ratio:1;display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(8,1fr);overflow:hidden;border-radius:8px;box-shadow:0 12px 32px rgba(0,0,0,.35)}
-.sq{position:relative;border:0;padding:0;display:flex;align-items:center;justify-content:center;font-family:"Segoe UI Symbol","Noto Sans Symbols 2",serif;font-size:clamp(2.1rem,10.5vw,4.2rem);line-height:1;user-select:none}.sq.light{background:var(--light)}.sq.dark{background:var(--dark)}.sq.sel{box-shadow:inset 0 0 0 5px rgba(255,237,83,.88)}.sq.last:after{content:"";position:absolute;inset:0;background:var(--last)}.piece{position:relative;z-index:2;transform:translateY(-2%)}.wp{color:#fff8e8;text-shadow:0 1px 1px #111,0 0 1px #111}.bp{color:#151515}.dot{position:absolute;width:28%;height:28%;border-radius:50%;background:rgba(30,30,30,.36);z-index:3}.ring{position:absolute;inset:8%;border:6px solid rgba(195,55,55,.72);border-radius:50%;z-index:3}.mapBadge{position:absolute;z-index:1;min-width:15px;height:15px;padding:0 3px;border-radius:999px;display:grid;place-items:center;font:950 .55rem/1 system-ui;color:#111;box-shadow:0 1px 2px rgba(0,0,0,.35)}.mapBadge.mine{left:4px;bottom:4px;background:#a8e666}.mapBadge.theirs{right:4px;top:4px;background:#ff8585}.coord{position:absolute;z-index:4;font:900 .62rem system-ui;opacity:.75}.file{right:3px;bottom:2px}.rank{left:3px;top:2px}.status{text-align:center;min-height:28px;color:var(--muted);font-weight:750;padding:4px}.status.strong{color:#fff}.dotColor{display:inline-block;width:13px;height:13px;border-radius:50%;border:1px solid #777;margin-right:7px;vertical-align:-1px}.whiteDot{background:#f8f2df}.blackDot{background:#1c1c1c}.you{font-size:.72rem;color:var(--accent);margin-left:6px}.moveLegend{display:none;justify-content:center;gap:14px;color:#aaa;font-size:.74rem;font-weight:800}.moveLegend.on{display:flex}.legendDot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}.legendMine{background:#a8e666}.legendTheirs{background:#ff8585}
-.toast{position:fixed;left:50%;bottom:max(18px,env(safe-area-inset-bottom));transform:translate(-50%,20px);opacity:0;transition:.18s;background:#0c0c0cf2;border:1px solid #444;border-radius:12px;padding:10px 14px;z-index:20;pointer-events:none}.toast.show{opacity:1;transform:translate(-50%,0)}.settingsOverlay{position:fixed;inset:0;z-index:15;background:rgba(0,0,0,.62);display:none;align-items:flex-end;justify-content:center;padding:16px}.settingsOverlay.open{display:flex}.settingsCard{width:min(100%,560px);background:#242424;border:1px solid #444;border-radius:20px;padding:18px;box-shadow:0 22px 70px rgba(0,0,0,.5)}.settingsHead{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}.settingsHead h2{margin:0;font-size:1.35rem}.closeBtn{width:34px;height:34px;border-radius:999px;border:1px solid #444;background:#303030;color:#fff;font-size:1.2rem}.settingRow{display:flex;gap:14px;align-items:center;justify-content:space-between;padding:14px 0;border-top:1px solid #393939}.settingText{display:flex;flex-direction:column;gap:4px}.settingText small{color:#999;line-height:1.35}.switch{position:relative;flex:0 0 50px;width:50px;height:29px}.switch input{position:absolute;opacity:0;pointer-events:none}.switchTrack{position:absolute;inset:0;background:#555;border-radius:999px;transition:.15s}.switchTrack:after{content:"";position:absolute;width:23px;height:23px;left:3px;top:3px;background:#eee;border-radius:50%;transition:.15s}.switch input:checked+.switchTrack{background:var(--accent)}.switch input:checked+.switchTrack:after{transform:translateX(21px);background:#14200a}.settingsNote{margin:4px 0 0;color:#777;font-size:.76rem}
+.sq{position:relative;border:0;padding:0;display:flex;align-items:center;justify-content:center;font-family:"Segoe UI Symbol","Noto Sans Symbols 2",serif;font-size:clamp(2.1rem,10.5vw,4.2rem);line-height:1;user-select:none}.sq.light{background:var(--light)}.sq.dark{background:var(--dark)}.sq.sel{box-shadow:inset 0 0 0 5px rgba(255,237,83,.88)}.sq.last:after{content:"";position:absolute;inset:0;background:var(--last)}.piece{position:relative;z-index:2;transform:translateY(-2%)}.wp{color:var(--whitePiece);text-shadow:0 1px 1px #111,0 0 1px #111}.bp{color:var(--blackPiece)}.dot{position:absolute;width:28%;height:28%;border-radius:50%;background:rgba(30,30,30,.36);z-index:3}.ring{position:absolute;inset:8%;border:6px solid rgba(195,55,55,.72);border-radius:50%;z-index:3}.mapBadge{position:absolute;z-index:1;min-width:15px;height:15px;padding:0 3px;border-radius:999px;display:grid;place-items:center;font:950 .55rem/1 system-ui;color:#111;box-shadow:0 1px 2px rgba(0,0,0,.35)}.mapBadge.mine{left:4px;bottom:4px;background:#a8e666}.mapBadge.theirs{right:4px;top:4px;background:#ff8585}.coord{position:absolute;z-index:4;font:900 .62rem system-ui;opacity:.75}.file{right:3px;bottom:2px}.rank{left:3px;top:2px}.status{text-align:center;min-height:28px;color:var(--muted);font-weight:750;padding:4px}.status.strong{color:#fff}.dotColor{display:inline-block;width:13px;height:13px;border-radius:50%;border:1px solid #777;margin-right:7px;vertical-align:-1px}.whiteDot{background:#f8f2df}.blackDot{background:#1c1c1c}.you{font-size:.72rem;color:var(--accent);margin-left:6px}.moveLegend{display:none;justify-content:center;gap:14px;color:#aaa;font-size:.74rem;font-weight:800}.moveLegend.on{display:flex}.legendDot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}.legendMine{background:#a8e666}.legendTheirs{background:#ff8585}
+.toast{position:fixed;left:50%;bottom:max(18px,env(safe-area-inset-bottom));transform:translate(-50%,20px);opacity:0;transition:.18s;background:#0c0c0cf2;border:1px solid #444;border-radius:12px;padding:10px 14px;z-index:20;pointer-events:none}.toast.show{opacity:1;transform:translate(-50%,0)}.settingsOverlay{position:fixed;inset:0;z-index:15;background:rgba(0,0,0,.62);display:none;align-items:flex-end;justify-content:center;padding:16px}.settingsOverlay.open{display:flex}.settingsCard{width:min(100%,560px);max-height:88dvh;overflow:auto;background:#242424;border:1px solid #444;border-radius:20px;padding:18px;box-shadow:0 22px 70px rgba(0,0,0,.5)}.settingsHead{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}.settingsHead h2{margin:0;font-size:1.35rem}.closeBtn{width:34px;height:34px;border-radius:999px;border:1px solid #444;background:#303030;color:#fff;font-size:1.2rem}.settingRow{display:flex;gap:14px;align-items:center;justify-content:space-between;padding:14px 0;border-top:1px solid #393939}.settingText{display:flex;flex-direction:column;gap:4px}.settingText small{color:#999;line-height:1.35}.switch{position:relative;flex:0 0 50px;width:50px;height:29px}.switch input{position:absolute;opacity:0;pointer-events:none}.switchTrack{position:absolute;inset:0;background:#555;border-radius:999px;transition:.15s}.switchTrack:after{content:"";position:absolute;width:23px;height:23px;left:3px;top:3px;background:#eee;border-radius:50%;transition:.15s}.switch input:checked+.switchTrack{background:var(--accent)}.switch input:checked+.switchTrack:after{transform:translateX(21px);background:#14200a}.settingsNote{margin:4px 0 0;color:#777;font-size:.76rem}.colorGrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:12px 0;border-top:1px solid #393939}.colorField{display:grid;grid-template-columns:1fr auto;align-items:center;gap:8px;background:#1b1b1b;border:1px solid #3c3c3c;border-radius:12px;padding:9px 10px;font-size:.78rem;color:#bbb;font-weight:800}.colorField input{width:34px;height:28px;padding:0;border:0;background:transparent}.actions{grid-template-columns:repeat(3,1fr)}.secondary:disabled{opacity:.42}.undoNudge{position:fixed;left:50%;bottom:max(18px,env(safe-area-inset-bottom));transform:translate(-50%,20px);opacity:0;pointer-events:none;transition:.18s;z-index:12;display:flex;align-items:center;gap:10px;background:#111;border:1px solid #4a4a4a;border-radius:14px;padding:8px 8px 8px 12px;box-shadow:0 14px 40px rgba(0,0,0,.45);white-space:nowrap}.undoNudge.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}.undoNudge button{border:0;border-radius:10px;background:var(--accent);color:#14200a;padding:8px 10px;font-weight:900}.confirmOverlay{position:fixed;inset:0;z-index:18;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;padding:18px}.confirmOverlay.open{display:flex}.confirmCard{width:min(100%,430px);background:#242424;border:1px solid #444;border-radius:20px;padding:20px;box-shadow:0 25px 80px rgba(0,0,0,.55)}.confirmCard h2{margin:0 0 8px}.confirmCard p{color:#bbb;line-height:1.45;margin:0 0 16px}.confirmButtons{display:grid;grid-template-columns:1fr 1fr;gap:9px}
 </style>
 </head>
 <body>
@@ -43,12 +43,12 @@
 <button id="cancel" class="danger" style="margin-top:8px">Cancel room</button>
 </section>
 <section id="game">
-<div class="player"><div><span id="oppDot" class="dotColor"></span>Opponent</div><div id="oppClock" class="clock">3:00.0</div></div>
+<div class="player"><div class="playerInfo"><div class="playerName"><span id="oppDot" class="dotColor"></span>Opponent</div><div id="oppCaptured" class="capturedShelf"></div></div><div id="oppClock" class="clock">3:00.0</div></div>
 <div id="moveLegend" class="moveLegend"><span><i class="legendDot legendMine"></i>Your moves</span><span><i class="legendDot legendTheirs"></i>Opponent moves</span></div>
 <div id="board" aria-label="Chess board"></div>
-<div class="player"><div><span id="myDot" class="dotColor"></span>You <span class="you">YOU</span></div><div id="myClock" class="clock">3:00.0</div></div>
+<div class="player"><div class="playerInfo"><div class="playerName"><span id="myDot" class="dotColor"></span>You <span class="you">YOU</span></div><div id="myCaptured" class="capturedShelf"></div></div><div id="myClock" class="clock">3:00.0</div></div>
 <div id="gameStatus" class="status">Connecting…</div>
-<div class="actions"><button id="flip" class="secondary">Flip board</button><button id="newGame" class="secondary">New game</button></div>
+<div class="actions"><button id="flip" class="secondary">Flip board</button><button id="undoMove" class="secondary" disabled>Undo</button><button id="newGame" class="secondary">New game</button></div>
 </section>
 </main>
 <div id="settingsOverlay" class="settingsOverlay" aria-hidden="true">
@@ -58,27 +58,51 @@
       <span class="settingText"><strong>Always show all moves</strong><small>Show every legal destination for both your pieces and your opponent's pieces.</small></span>
       <span class="switch"><input id="showAllMoves" type="checkbox"><span class="switchTrack"></span></span>
     </label>
-    <p class="settingsNote">Saved only in this browser on this device.</p>
+    <div class="colorGrid" aria-label="Board and piece colors">
+      <label class="colorField"><span>Light squares</span><input id="lightColor" type="color" value="#e7d5b8"></label>
+      <label class="colorField"><span>Dark squares</span><input id="darkColor" type="color" value="#8d684d"></label>
+      <label class="colorField"><span>White pieces</span><input id="whitePieceColor" type="color" value="#fff8e8"></label>
+      <label class="colorField"><span>Black pieces</span><input id="blackPieceColor" type="color" value="#151515"></label>
+    </div>
+    <p class="settingsNote">Settings are saved only in this browser on this device.</p>
   </section>
 </div>
+<div id="undoConfirm" class="confirmOverlay" aria-hidden="true">
+  <section class="confirmCard" role="dialog" aria-modal="true" aria-labelledby="undoTitle">
+    <h2 id="undoTitle">Undo latest move?</h2>
+    <p id="undoText">Your opponent wants to take back the latest move.</p>
+    <div class="confirmButtons"><button id="rejectUndo" class="secondary">Keep move</button><button id="acceptUndo" class="primary">Accept undo</button></div>
+  </section>
+</div>
+<div id="undoNudge" class="undoNudge"><span id="undoNudgeText">Move sent.</span><button id="undoNudgeBtn">Request undo</button></div>
 <div id="toast" class="toast"></div>
 <script type="module">
 import { Chess } from "https://cdn.jsdelivr.net/npm/chess.js@1.4.0/+esm";
 import { Peer } from "https://cdn.jsdelivr.net/npm/peerjs@1.5.5/+esm";
 
 const P={w:{k:"♔",q:"♕",r:"♖",b:"♗",n:"♘",p:"♙"},b:{k:"♚",q:"♛",r:"♜",b:"♝",n:"♞",p:"♟"}};
+const PIECE_VALUE={p:1,n:3,b:3,r:5,q:9,k:0};
 const $=id=>document.getElementById(id);
 const lobby=$("lobby"),wait=$("wait"),game=$("game"),board=$("board"),net=$("net"),roomIn=$("roomIn"),gameStatus=$("gameStatus");
-let minutes=3,peer=null,conn=null,isHost=false,myColor="w",flipped=false,room="",selected=null,targets=[],view=new Chess(),state=null,receivedAt=0,hostChess=null,lastTick=0,timer=null,toastTimer=null;
+let minutes=3,peer=null,conn=null,isHost=false,myColor="w",flipped=false,room="",selected=null,targets=[],view=new Chess(),state=null,receivedAt=0,hostChess=null,lastTick=0,timer=null,toastTimer=null,undoNudgeTimer=null,lastNudgedRevision=null,hostUndoSnapshot=null,pendingUndo=null;
 const SETTINGS_KEY="speedchess.settings.v1";
-let clientSettings={showAllMoves:false};
+let clientSettings={showAllMoves:false,lightColor:"#e7d5b8",darkColor:"#8d684d",whitePieceColor:"#fff8e8",blackPieceColor:"#151515"};
 try{clientSettings=Object.assign(clientSettings,JSON.parse(localStorage.getItem(SETTINGS_KEY)||"{}"));}catch{}
 
 const timeMin=$("timeMin"),timeSec=$("timeSec"),settingsOverlay=$("settingsOverlay"),showAllMoves=$("showAllMoves");
+const colorInputs={lightColor:$("lightColor"),darkColor:$("darkColor"),whitePieceColor:$("whitePieceColor"),blackPieceColor:$("blackPieceColor")};
 showAllMoves.checked=!!clientSettings.showAllMoves;
+Object.entries(colorInputs).forEach(([k,input])=>input.value=clientSettings[k]);
 function openSettings(){settingsOverlay.classList.add("open");settingsOverlay.setAttribute("aria-hidden","false");}
 function closeSettings(){settingsOverlay.classList.remove("open");settingsOverlay.setAttribute("aria-hidden","true");}
 function saveClientSettings(){try{localStorage.setItem(SETTINGS_KEY,JSON.stringify(clientSettings));}catch{}}
+function applyTheme(){
+  const root=document.documentElement.style;
+  root.setProperty("--light",clientSettings.lightColor);root.setProperty("--dark",clientSettings.darkColor);
+  root.setProperty("--whitePiece",clientSettings.whitePieceColor);root.setProperty("--blackPiece",clientSettings.blackPieceColor);
+}
+applyTheme();
+Object.entries(colorInputs).forEach(([k,input])=>input.oninput=()=>{clientSettings[k]=input.value;saveClientSettings();applyTheme();});
 $("settingsBtn").onclick=openSettings;$("closeSettings").onclick=closeSettings;
 settingsOverlay.onclick=e=>{if(e.target===settingsOverlay)closeSettings();};
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeSettings();});
@@ -101,7 +125,7 @@ document.querySelectorAll(".preset").forEach(b=>b.onclick=()=>{
 timeMin.onchange=setClockFromInputs;timeSec.onchange=setClockFromInputs;
 timeMin.oninput=()=>document.querySelectorAll(".preset").forEach(x=>x.classList.remove("active"));
 timeSec.oninput=()=>document.querySelectorAll(".preset").forEach(x=>x.classList.remove("active"));
-$("create").onclick=()=>{if(setClockFromInputs()<1){showToast("Enter a starting time.");return;}createGame();};$("join").onclick=()=>joinGame(roomIn.value);$("cancel").onclick=reset;$("newGame").onclick=reset;$("flip").onclick=()=>{flipped=!flipped;renderBoard();};$("copy").onclick=copyInvite;$("share").onclick=shareInvite;
+$("create").onclick=()=>{if(setClockFromInputs()<1){showToast("Enter a starting time.");return;}createGame();};$("join").onclick=()=>joinGame(roomIn.value);$("cancel").onclick=reset;$("newGame").onclick=reset;$("flip").onclick=()=>{flipped=!flipped;renderBoard();};$("undoMove").onclick=requestUndo;$("undoNudgeBtn").onclick=requestUndo;$("copy").onclick=copyInvite;$("share").onclick=shareInvite;
 roomIn.oninput=()=>roomIn.value=clean(roomIn.value);roomIn.onkeydown=e=>{if(e.key==="Enter")joinGame(roomIn.value);};
 const hashRoom=new URLSearchParams(location.hash.slice(1)).get("join");if(hashRoom){roomIn.value=clean(hashRoom);history.replaceState(null,"",location.pathname+location.search);}
 
@@ -133,22 +157,77 @@ function wireConn(){
 }
 function startHosted(){
   hostChess=new Chess();lastTick=Date.now();const ms=minutes*60000;
-  state={type:"state",fen:hostChess.fen(),whiteMs:ms,blackMs:ms,turn:"w",running:true,result:null,reason:null,lastMove:null,hostColor:"w",guestColor:"b",timeMinutes:minutes,revision:1};
+  state={type:"state",fen:hostChess.fen(),whiteMs:ms,blackMs:ms,turn:"w",running:true,result:null,reason:null,lastMove:null,hostColor:"w",guestColor:"b",timeMinutes:minutes,revision:1,capturedWhite:[],capturedBlack:[],canUndo:false};
   wait.style.display="none";game.style.display="flex";const s=snapshot();receiveState(s);sendState(s);clearInterval(timer);timer=setInterval(()=>{if(isHost&&state&&state.running){const before=state.result;applyElapsed();if(!before&&state.result){const x=snapshot();receiveState(x);sendState(x);}}renderClocks();},100);
 }
-function onData(d){if(!d||typeof d!=="object")return;if(d.type==="state"&&!isHost)receiveState(d);if(d.type==="move"&&isHost)applyMove(d);if(d.type==="sync"&&isHost)sendState();}
+function onData(d){
+  if(!d||typeof d!=="object")return;
+  if(d.type==="state"&&!isHost)receiveState(d);
+  if(d.type==="move"&&isHost)applyMove(d);
+  if(d.type==="sync"&&isHost)sendState();
+  if(d.type==="undo-request"&&isHost)beginUndoFromGuest(d);
+  if(d.type==="undo-offer"&&!isHost)showUndoOffer(d);
+  if(d.type==="undo-response"&&isHost)finishUndo(d.accepted,d.revision);
+  if(d.type==="undo-result"&&!isHost)handleUndoResult(d);
+}
 function applyElapsed(){if(!state||!state.running||state.result)return;const now=Date.now(),dt=Math.max(0,now-lastTick);if(state.turn==="w")state.whiteMs=Math.max(0,state.whiteMs-dt);else state.blackMs=Math.max(0,state.blackMs-dt);lastTick=now;if(state.whiteMs<=0||state.blackMs<=0){state.running=false;state.result=state.whiteMs<=0?"b":"w";state.reason="time";state.revision++;}}
 function applyMove(m){
   if(!state||!state.running||state.result||!hostChess)return;applyElapsed();if(state.result){sendState();return;}
-  const sender=m.local?myColor:"b";if(hostChess.turn()!==sender)return;let mv=null;try{mv=hostChess.move({from:m.from,to:m.to,promotion:m.promotion||"q"});}catch{}if(!mv)return;
-  state.fen=hostChess.fen();state.turn=hostChess.turn();state.lastMove={from:mv.from,to:mv.to,san:mv.san};state.revision++;lastTick=Date.now();
+  const sender=m.local?myColor:"b";if(hostChess.turn()!==sender)return;
+  const before={fen:hostChess.fen(),whiteMs:state.whiteMs,blackMs:state.blackMs,turn:state.turn,running:state.running,result:state.result,reason:state.reason,lastMove:state.lastMove,capturedWhite:[...(state.capturedWhite||[])],capturedBlack:[...(state.capturedBlack||[])]};
+  let mv=null;try{mv=hostChess.move({from:m.from,to:m.to,promotion:m.promotion||"q"});}catch{}if(!mv)return;
+  if(mv.captured)(sender==="w"?state.capturedWhite:state.capturedBlack).push(mv.captured);
+  state.fen=hostChess.fen();state.turn=hostChess.turn();state.lastMove={from:mv.from,to:mv.to,san:mv.san,color:sender};state.revision++;state.canUndo=true;hostUndoSnapshot={revision:state.revision,before};pendingUndo=null;hideUndoOffer();lastTick=Date.now();
   if(hostChess.isGameOver()){state.running=false;if(hostChess.isCheckmate()){state.result=hostChess.turn()==="w"?"b":"w";state.reason="checkmate";}else{state.result="draw";state.reason=hostChess.isStalemate()?"stalemate":hostChess.isThreefoldRepetition()?"threefold repetition":hostChess.isInsufficientMaterial()?"insufficient material":"draw";}}
   const s=snapshot();receiveState(s);sendState(s);
 }
 function snapshot(){applyElapsed();return Object.assign({},state,{whiteMs:Math.round(state.whiteMs),blackMs:Math.round(state.blackMs)});}
 function sendState(s){if(isHost&&conn&&conn.open&&state)conn.send(s||snapshot());}
-function receiveState(s){state=Object.assign({},s);receivedAt=Date.now();view=new Chess(state.fen);selected=null;targets=[];render();}
-function requestMove(from,to){if(!state||!state.running||state.result)return;if(state.turn!==myColor){showToast("It is not your turn.");return;}const m={type:"move",from:from,to:to,promotion:"q"};if(isHost)applyMove(Object.assign({local:true},m));else if(conn&&conn.open)conn.send(m);}
+function receiveState(s){state=Object.assign({},s);state.capturedWhite=state.capturedWhite||[];state.capturedBlack=state.capturedBlack||[];receivedAt=Date.now();view=new Chess(state.fen);selected=null;targets=[];render();updateUndoUi();}
+function requestMove(from,to){if(!state||!state.running||state.result)return;if(state.turn!==myColor){showToast("It is not your turn.");return;}const m={type:"move",from:from,to:to,promotion:"q"};hideUndoNudge();if(isHost)applyMove(Object.assign({local:true},m));else if(conn&&conn.open)conn.send(m);}
+
+function canRequestUndo(){return !!(state&&state.canUndo&&state.lastMove&&state.lastMove.color===myColor&&!pendingUndo);}
+function updateUndoUi(){
+  $("undoMove").disabled=!canRequestUndo();
+  if(!state||!state.canUndo||!state.lastMove||state.lastMove.color!==myColor){hideUndoNudge();return;}
+  if(lastNudgedRevision!==state.revision){lastNudgedRevision=state.revision;showUndoNudge(state.lastMove.san);}
+}
+function showUndoNudge(san){clearTimeout(undoNudgeTimer);$("undoNudgeText").textContent=(san?san+" played. ":"")+"Want it back?";$("undoNudge").classList.add("show");undoNudgeTimer=setTimeout(hideUndoNudge,5500);}
+function hideUndoNudge(){clearTimeout(undoNudgeTimer);$("undoNudge").classList.remove("show");}
+function requestUndo(){
+  hideUndoNudge();
+  if(!canRequestUndo()){showToast("Only your latest move can be undone.");return;}
+  const revision=state.revision;
+  if(isHost){
+    if(!conn||!conn.open){showToast("Opponent is not connected.");return;}
+    pendingUndo={revision,requester:myColor};conn.send({type:"undo-offer",revision,requester:myColor,san:state.lastMove.san});$("undoMove").disabled=true;showToast("Undo request sent.");
+  }else{
+    if(!conn||!conn.open){showToast("Opponent is not connected.");return;}
+    pendingUndo={revision,requester:myColor};conn.send({type:"undo-request",revision,requester:myColor});$("undoMove").disabled=true;showToast("Undo request sent.");
+  }
+}
+function beginUndoFromGuest(d){
+  if(!state||!hostUndoSnapshot||!state.canUndo||d.revision!==state.revision||hostUndoSnapshot.revision!==state.revision||state.lastMove?.color!==d.requester){conn?.send({type:"undo-result",accepted:false,revision:d.revision,reason:"stale"});return;}
+  pendingUndo={revision:d.revision,requester:d.requester};showUndoOffer({revision:d.revision,requester:d.requester,san:state.lastMove.san});
+}
+function showUndoOffer(d){
+  pendingUndo={revision:d.revision,requester:d.requester};$("undoText").textContent="Your opponent wants to undo "+(d.san||"the latest move")+". The board and clocks will return to just before that move.";$("undoConfirm").classList.add("open");$("undoConfirm").setAttribute("aria-hidden","false");
+}
+function hideUndoOffer(){$("undoConfirm").classList.remove("open");$("undoConfirm").setAttribute("aria-hidden","true");}
+$("acceptUndo").onclick=()=>respondUndo(true);$("rejectUndo").onclick=()=>respondUndo(false);
+function respondUndo(accepted){
+  if(!pendingUndo){hideUndoOffer();return;}const revision=pendingUndo.revision;hideUndoOffer();
+  if(isHost)finishUndo(accepted,revision);else{conn?.send({type:"undo-response",accepted,revision});pendingUndo=null;if(!accepted)showToast("Move kept.");}
+}
+function finishUndo(accepted,revision){
+  if(!pendingUndo||revision!==pendingUndo.revision){return;}
+  if(!accepted){conn?.send({type:"undo-result",accepted:false,revision});pendingUndo=null;showToast("Move kept.");updateUndoUi();return;}
+  if(!state||!hostUndoSnapshot||revision!==state.revision||hostUndoSnapshot.revision!==state.revision){conn?.send({type:"undo-result",accepted:false,revision,reason:"stale"});pendingUndo=null;showToast("Too late to undo.");return;}
+  const before=hostUndoSnapshot.before;try{hostChess.undo();}catch{}
+  state.fen=hostChess.fen();state.whiteMs=before.whiteMs;state.blackMs=before.blackMs;state.turn=before.turn;state.running=before.running;state.result=before.result;state.reason=before.reason;state.lastMove=before.lastMove;state.capturedWhite=[...before.capturedWhite];state.capturedBlack=[...before.capturedBlack];state.revision++;state.canUndo=false;
+  hostUndoSnapshot=null;pendingUndo=null;lastTick=Date.now();hideUndoOffer();const s=snapshot();receiveState(s);sendState(s);conn?.send({type:"undo-result",accepted:true,revision});showToast("Move undone.");
+}
+function handleUndoResult(d){pendingUndo=null;hideUndoOffer();if(d.accepted)showToast("Move undone.");else showToast(d.reason==="stale"?"Too late to undo.":"Undo declined.");updateUndoUi();}
 
 function choose(square){
   if(!state||!state.running||state.result||state.turn!==myColor)return;const piece=view.get(square);
@@ -156,8 +235,16 @@ function choose(square){
   if(piece&&piece.color===myColor)select(square);
 }
 function select(square){selected=square;targets=view.moves({square:square,verbose:true});renderBoard();}
-function render(){myColor=isHost?(state.hostColor||"w"):(state.guestColor||"b");renderPlayers();renderBoard();renderClocks();renderStatus();}
+function render(){myColor=isHost?(state.hostColor||"w"):(state.guestColor||"b");renderPlayers();renderCaptured();renderBoard();renderClocks();renderStatus();}
 function renderPlayers(){const other=myColor==="w"?"b":"w";$("myDot").className="dotColor "+(myColor==="w"?"whiteDot":"blackDot");$("oppDot").className="dotColor "+(other==="w"?"whiteDot":"blackDot");}
+function renderCaptured(){
+  const mine=myColor==="w"?(state?.capturedWhite||[]):(state?.capturedBlack||[]),theirs=myColor==="w"?(state?.capturedBlack||[]):(state?.capturedWhite||[]);
+  const renderShelf=(el,items,capturedColor)=>{
+    const points=items.reduce((n,p)=>n+(PIECE_VALUE[p]||0),0),pieces=items.map(p=>'<span class="capturedPiece '+(capturedColor==="w"?"wp":"bp")+'">'+P[capturedColor][p]+'</span>').join("");
+    el.innerHTML='<span class="capturedPieces">'+(pieces||'<span style="opacity:.45">—</span>')+'</span><span class="capturedPoints">'+points+' pts</span>';
+  };
+  renderShelf($("myCaptured"),mine,myColor==="w"?"b":"w");renderShelf($("oppCaptured"),theirs,myColor);
+}
 function legalMovesFor(color){
   try{
     const parts=view.fen().split(" ");
@@ -193,7 +280,7 @@ function invite(){const u=new URL(location.href);u.hash="join="+room;return u.to
 async function copyInvite(){try{await navigator.clipboard.writeText(invite()+"\nRoom code: "+room);showToast("Invite copied.");}catch{showToast("Room code: "+room);}}
 async function shareInvite(){const d={title:"SpeedChess",text:"Play me in SpeedChess. Room code: "+room,url:invite()};if(navigator.share){try{await navigator.share(d);}catch{}}else copyInvite();}
 function peerError(err){console.error(err);setNet("Connection failed","err");gameStatus.textContent="Could not connect. Check the room code and try again.";}
-function resetNetwork(){clearInterval(timer);timer=null;try{if(conn)conn.close();}catch{}try{if(peer)peer.destroy();}catch{}conn=null;peer=null;hostChess=null;state=null;selected=null;targets=[];view=new Chess();}
+function resetNetwork(){clearInterval(timer);timer=null;clearTimeout(undoNudgeTimer);try{if(conn)conn.close();}catch{}try{if(peer)peer.destroy();}catch{}conn=null;peer=null;hostChess=null;hostUndoSnapshot=null;pendingUndo=null;state=null;selected=null;targets=[];lastNudgedRevision=null;hideUndoOffer();hideUndoNudge();view=new Chess();}
 function reset(){resetNetwork();isHost=false;myColor="w";flipped=false;room="";setNet("Ready");wait.style.display="none";game.style.display="none";lobby.style.display="block";renderBoard();}
 document.addEventListener("visibilitychange",()=>{if(!document.hidden&&isHost&&state&&state.running){const s=snapshot();receiveState(s);sendState(s);}else if(!document.hidden&&!isHost&&conn&&conn.open)conn.send({type:"sync"});});
 renderBoard();
